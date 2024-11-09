@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import OpenAI from 'openai';
+=======
+import { openai } from "@ai-sdk/openai";
+import { streamText } from "ai";
+>>>>>>> ayev
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -8,6 +13,7 @@ export const maxDuration = 30;
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
+<<<<<<< HEAD
   messages[messages.length - 1].content +=
     `You are a helpful assistant for a digital AI platform that helps users with interview preparation.
 
@@ -59,3 +65,12 @@ const b = async (transcriptionText: string) => {
     console.error('Error generating scores:', error);
   }
 };
+=======
+  const result = await streamText({
+    model: openai("gpt-4-turbo"),
+    messages,
+  });
+
+  return Response.json(result);
+}
+>>>>>>> ayev

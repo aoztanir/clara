@@ -1,30 +1,43 @@
-const HEYGEN_API_KEY = process.env.HEYGEN_API_KEY;
+// app/api/get-access-token/route.ts
+import { NextResponse } from 'next/server'
 
+export const runtime = 'edge'
+
+/**
+ * Edge API route handler for HeyGen token generation
+ */
 export async function POST() {
   try {
-    if (!HEYGEN_API_KEY) {
-      throw new Error("API key is missing from .env");
+    const apiKey = process.env.HEYGEN_API_KEY
+    
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'API key not configured' },
+        { status: 500 }
+      )
     }
 
-    const res = await fetch(
-      "https://api.heygen.com/v1/streaming.create_token",
-      {
-        method: "POST",
-        headers: {
-          "x-api-key": HEYGEN_API_KEY,
-        },
-      },
-    );
-    const data = await res.json();
+    const response = await fetch('https://api.heygen.com/v1/streaming.create_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey
+      }
+    })
 
-    return new Response(data.data.token, {
-      status: 200,
-    });
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(`HeyGen API Error: ${JSON.stringify(errorData)}`)
+    }
+
+    const data = await response.json()
+    return NextResponse.json(data)
+
   } catch (error) {
-    console.error("Error retrieving access token:", error);
-
-    return new Response("Failed to retrieve access token", {
-      status: 500,
-    });
+    console.error('HeyGen token generation error:', error)
+    return NextResponse.json(
+      { error: 'Failed to generate token' },
+      { status: 500 }
+    )
   }
 }
