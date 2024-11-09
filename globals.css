@@ -1,0 +1,55 @@
+:root {
+  scroll-behavior: smooth;
+}
+
+.classy-text,
+.artsy-text {
+  font-family: 'DM Serif Text', serif;
+  font-optical-sizing: auto;
+  font-weight: 900;
+  font-style: normal;
+}
+.ransom-note-font {
+  font-family: 'RansomNote', sans-serif;
+}
+
+:root[data-mantine-color-scheme='light'] {
+  --custom-contrast-color: black;
+  --custom-contrast-color-text: white;
+  --mantine-color-text: black !important;
+}
+:root[data-mantine-color-scheme='dark'] {
+  --custom-contrast-color: white;
+  --custom-contrast-color-text: black;
+  --mantine-color-text: white !important;
+}
+
+.scale-on-hover:hover {
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+.scale-on-hover {
+  transition: all 0.3s ease;
+}
+
+.fade-bottom {
+  --mask: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0,
+      rgba(0, 0, 0, 1) 40%,
+      rgba(0, 0, 0, 0) 95%,
+      rgba(0, 0, 0, 0) 0
+    )
+    100% 50% / 100% 100% repeat-x;
+
+  font: 2em/1.6em Arial;
+  -webkit-mask: var(--mask);
+  mask: var(--mask);
+}
+.no-fade {
+  --mask: none;
+
+  border: none;
+  -webkit-mask: none;
+  mask: none;
+}
