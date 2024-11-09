@@ -6,6 +6,9 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 export default withBundleAnalyzer({
   reactStrictMode: false,
+  images: {
+    domains: ['media.istockphoto.com'],
+  },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

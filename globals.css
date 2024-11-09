@@ -19,7 +19,7 @@
 .artsy-text {
   font-family: 'DM Serif Text', serif;
   font-optical-sizing: auto;
-  font-weight: 900;
+  font-weight: 900 !important;
   font-style: normal;
 }
 .ransom-note-font {

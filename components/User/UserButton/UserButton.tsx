@@ -10,7 +10,7 @@ export function UserButton({ compressed }: { compressed: boolean }) {
   return (
     <Flex align="center" gap="xs">
       <Box style={{ flex: 1 }} ml="auto" mr="0" w="fit-content" hidden={compressed}>
-        <Text size="sm" fw={900} ta="right">
+        <Text size="md" fw={900} ta="right" className="artsy-text">
           {user?.user_metadata?.full_name}
         </Text>
 

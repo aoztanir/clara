@@ -14,6 +14,7 @@ export default function Logo({
   return (
     <Flex align="center" gap="3" justify="center">
       <Image
+        alt="logo"
         width={width}
         height={height}
         src={computedColorScheme == 'light' ? '/dark_logo.png' : '/light_logo.png'}

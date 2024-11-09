@@ -8,7 +8,7 @@ const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'));
 const UserMessage = ({ username = 'user', content = 'content', user = true }) => {
   if (!user) {
     return (
-      <Flex align="bottom" gap="xs">
+      <Flex align="bottom" gap="xs" ml="auto" mr="0">
         <Paper style={{ borderBottomRightRadius: '0' }} shadow="xl" bg="gray.2" radius="md" p="md">
           <MarkdownPreview
             source={content}
@@ -22,7 +22,7 @@ const UserMessage = ({ username = 'user', content = 'content', user = true }) =>
     );
   }
   return (
-    <Flex align="bottom" gap="xs">
+    <Flex align="bottom" gap="xs" mr="auto" ml="0">
       <Avatar mt="auto" mb="0" />
       <Paper style={{ borderBottomLeftRadius: '0' }} shadow="xl" bg="dark.7" radius="md" p="md">
         <MarkdownPreview

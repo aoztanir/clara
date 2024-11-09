@@ -10,7 +10,7 @@ export default function Header() {
   return (
     <Group w="100%" h="100%" px="md">
       <Box>
-        <Title order={1} fw="900" fz="20">
+        <Title order={1} fw="900" fz="20" className="artsy-text">
           {activeLink?.label}
         </Title>
         <Flex gap="5" align="center">

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AlignLeft, ArrowDown, GearSix, VideoCamera } from '@phosphor-icons/react';
+import { AlignLeft, ArrowDown, Barbell, GearSix, VideoCamera } from '@phosphor-icons/react';
 import { IconBulb, IconCheckbox, IconLogout, IconSearch, IconUser } from '@tabler/icons-react';
 import {
   ActionIcon,
@@ -18,6 +18,7 @@ import {
   Stack,
   Text,
   TextInput,
+  ThemeIcon,
   Tooltip,
   UnstyledButton,
 } from '@mantine/core';
@@ -34,6 +35,45 @@ const links = [
   { icon: IconBulb, label: 'Activity', notifications: 3 },
   { icon: IconCheckbox, label: 'Tasks', notifications: 4 },
   { icon: IconUser, label: 'Contacts' },
+];
+
+const resourceLinks = [
+  { emoji: '📝', label: 'LeetCode Problems', href: 'https://leetcode.com/problemset/all/' },
+  {
+    emoji: '💼',
+    label: 'Glassdoor Interviews',
+    href: 'https://www.glassdoor.com/Interview/index.htm',
+  },
+  {
+    emoji: '🧠',
+    label: 'HackerRank Practice',
+    href: 'https://www.hackerrank.com/interview/preparation-kits',
+  },
+  {
+    emoji: '📚',
+    label: 'GeeksForGeeks',
+    href: 'https://www.geeksforgeeks.org/interview-preparation/',
+  },
+  { emoji: '🎯', label: 'AlgoExpert', href: 'https://www.algoexpert.io/product' },
+  {
+    emoji: '🗣️',
+    label: 'Indeed Interviews',
+    href: 'https://www.indeed.com/career-advice/interviewing',
+  },
+  { emoji: '💡', label: 'InterviewBit', href: 'https://www.interviewbit.com/practice/' },
+  {
+    emoji: '📊',
+    label: 'System Design Primer',
+    href: 'https://github.com/donnemartin/system-design-primer',
+  },
+  { emoji: '🎭', label: 'Pramp Mock Interviews', href: 'https://www.pramp.com/' },
+  {
+    emoji: '⚡',
+    label: 'Behavioral Questions',
+    href: 'https://www.themuse.com/advice/behavioral-interview-questions-answers-examples',
+  },
+  { emoji: '🔧', label: 'Tech Interview Handbook', href: 'https://www.techinterviewhandbook.org/' },
+  { emoji: '📈', label: 'Levels.fyi Interviews', href: 'https://www.levels.fyi/interviews/' },
 ];
 
 const collections = [
@@ -64,16 +104,18 @@ export function NavbarSearch() {
   useEffect(() => {
     setActiveLink(navbarLinks.find((link) => link.href === pathname));
   }, [pathname]);
-  const collectionLinks = collections.map((collection) => (
-    <a
-      href="#"
+  const collectionLinks = resourceLinks.map((collection) => (
+    <Link
+      // style={{ zIndex: 10000000000000 }}
+      target="_blank"
+      href={collection.href}
       onClick={(event) => event.preventDefault()}
       key={collection.label}
       className={classes.collectionLink}
     >
       <span style={{ marginRight: rem(9), fontSize: rem(16) }}>{collection.emoji}</span>{' '}
       {collection.label}
-    </a>
+    </Link>
   ));
 
   return (
@@ -100,24 +142,32 @@ export function NavbarSearch() {
       </div>
       <Divider mb="sm" />
       {compressed ? (
-        <></>
+        <>
+          <ThemeIcon variant="transparent" mx="auto" w="100%">
+            {/* <Barbell weight="fill" size={25} color="var(--mantine-color-red-7)" /> */}
+            <Text ta="center" fz="30">
+              🏋️‍♂️
+            </Text>
+          </ThemeIcon>
+        </>
       ) : (
         <Box className={classes.section} px="5">
           <Group className={classes.collectionsHeader} justify="space-between">
             <Text size="xs" fw={500} c="dimmed">
-              Past Interviews
+              🏋️‍♂️ Practice here!
             </Text>
 
             <ActionIcon variant="transparent" size={18} c="dimmed">
               <ArrowDown weight="bold" />
             </ActionIcon>
           </Group>
-          <div className={classes.collections}>{collectionLinks}</div>
+          <div style={{ zIndex: 100000 }} className={classes.collections}>
+            {collectionLinks}
+          </div>
         </Box>
       )}
 
       <Flex
-        h="100%"
         justify="center"
         style={{ position: 'absolute', bottom: 0, left: 0, width: '100%' }}
         p="md"
