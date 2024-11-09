@@ -1,93 +1,334 @@
 // app/components/AvatarChat.tsx
-'use client';
+import type { StartAvatarResponse } from "@heygen/streaming-avatar";
 
-import { useState, useRef, useEffect } from 'react';
-import { AvatarQuality, StreamingEvents } from '@heygen/streaming-avatar';
-import  StreamingAvatar from '@heygen/streaming-avatar'
+import StreamingAvatar, {
+  AvatarQuality,
+  StreamingEvents, TaskMode, TaskType, VoiceEmotion,
+} from "@heygen/streaming-avatar";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Divider,
+  Input,
+  Select,
+  SelectItem,
+  Spinner,
+  Chip,
+  Tabs,
+  Tab,
+} from "@nextui-org/react";
+import { useEffect, useRef, useState } from "react";
+import { useMemoizedFn, usePrevious } from "ahooks";
 
-// Type for the HeyGen token
-type HeyGenToken = string & { __brand: 'HeyGenToken' };
+import { AVATARS, KNOWLEDGE } from "@/app/lib/constants";
 
-export default function AvatarChat() {
-    const [isRecording, setIsRecording] = useState(false);
-    const [isInitialized, setIsInitialized] = useState(false);
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const avatarRef = useRef<StreamingAvatar | null>(null);
+import InteractiveAvatarTextInput from "./InteractiveAvatarTextInput";
 
-    useEffect(() => {
-        const token = process.env.NEXT_PUBLIC_HEYGEN_TOKEN as HeyGenToken;
-        
-        if (!token) {
-            console.error('Missing HeyGen token');
-            return;
-        }
+export default function InteractiveAvatar() {
+  const [isLoadingSession, setIsLoadingSession] = useState(false);
+  const [isLoadingRepeat, setIsLoadingRepeat] = useState(false);
+  const [stream, setStream] = useState<MediaStream>();
+  const [debug, setDebug] = useState<string>();
+  const [knowledgeId, setKnowledgeId] = useState<string>("");
+  const [avatarId, setAvatarId] = useState<string>("");
+  const [language, setLanguage] = useState<string>('en');
 
-        const initAvatar = async () => {
-            try {
-                if (!avatarRef.current) {
-                    // Create new instance with properly typed token
-                    avatarRef.current = new StreamingAvatar({ token });
+  const [data, setData] = useState<StartAvatarResponse>();
+  const [text, setText] = useState<string>("");
+  const mediaStream = useRef<HTMLVideoElement>(null);
+  const avatar = useRef<StreamingAvatar | null>(null);
+  const [chatMode, setChatMode] = useState("text_mode");
+  const [isUserTalking, setIsUserTalking] = useState(false);
 
-                    avatarRef.current.on(StreamingEvents.STREAM_READY, () => {
-                        console.log('Stream ready');
-                        setIsInitialized(true);
-                    });
 
-                    await avatarRef.current.createStartAvatar({
-                        quality: AvatarQuality.Medium,
-                        avatarName: process.env.NEXT_PUBLIC_AVATAR_ID,
-                        voice: {
-                            voiceId: process.env.NEXT_PUBLIC_VOICE_ID,
-                            rate: 1.2,
-                        }
-                    });
-                }
-            } catch (error) {
-                console.error('Initialization error:', error);
-            }
-        };
+  // gets token from heygen api
+  async function fetchAccessToken() {
+    try {
+      const response = await fetch("/api/get-access-token", {
+        method: "POST",
+      });
+      const token = await response.text();
 
-        initAvatar();
+      console.log("Access Token:", token); // Log the token to verify
 
-        return () => {
-            if (avatarRef.current) {
-                avatarRef.current.closeVoiceChat();
-                avatarRef.current.stopAvatar();
-                avatarRef.current = null;
-            }
-            setIsInitialized(false);
-        };
-    }, []);
-
-    const toggleVoiceChat = async () => {
-        if (!avatarRef.current || !isInitialized) return;
-
-        try {
-            if (!isRecording) {
-                await avatarRef.current.startVoiceChat({
-                    useSilencePrompt: true
-                });
-                setIsRecording(true);
-            } else {
-                await avatarRef.current.closeVoiceChat();
-                setIsRecording(false);
-            }
-        } catch (error) {
-            console.error('Voice chat error:', error);
-            setIsRecording(false);
-        }
-    };
-
-    if (!isInitialized) {
-        return <div>Loading...</div>;
+      return token;
+    } catch (error) {
+      console.error("Error fetching access token:", error);
     }
 
-    return (
-        <div>
-            <video ref={videoRef} autoPlay playsInline />
-            <button onClick={toggleVoiceChat}>
-                {isRecording ? 'Stop' : 'Start'} Voice Chat
-            </button>
-        </div>
-    );
+    return "";
+  }
+  https://github.com/HeyGen-Official/InteractiveAvatarNextJSDemo.git
+  async function startSession() {
+    setIsLoadingSession(true);
+    const newToken = await fetchAccessToken();
+
+    avatar.current = new StreamingAvatar({
+      token: newToken,
+    });
+    avatar.current.on(StreamingEvents.AVATAR_START_TALKING, (e) => {
+      console.log("Avatar started talking", e);
+    });
+    avatar.current.on(StreamingEvents.AVATAR_STOP_TALKING, (e) => {
+      console.log("Avatar stopped talking", e);
+    });
+    avatar.current.on(StreamingEvents.STREAM_DISCONNECTED, () => {
+      console.log("Stream disconnected");
+      endSession();
+    });
+    avatar.current?.on(StreamingEvents.STREAM_READY, (event) => {
+      console.log(">>>>> Stream ready:", event.detail);
+      setStream(event.detail);
+    });
+    avatar.current?.on(StreamingEvents.USER_START, (event) => {
+      console.log(">>>>> User started talking:", event);
+      setIsUserTalking(true);
+    });
+    avatar.current?.on(StreamingEvents.USER_STOP, (event) => {
+      console.log(">>>>> User stopped talking:", event);
+      setIsUserTalking(false);
+    });
+    try {
+      const res = await avatar.current.createStartAvatar({
+        quality: AvatarQuality.High,
+        avatarName: avatarId,
+        knowledgeId: knowledgeId, // Or use a custom `knowledgeBase`.
+        voice: {
+          rate: 1.2, // 0.5 ~ 1.5
+          emotion: VoiceEmotion.SERIOUS,
+        },
+        language: language,
+      });
+
+      setData(res);
+      // default to voice mode
+      await avatar.current?.startVoiceChat();
+      setChatMode("voice_mode");
+    } catch (error) {
+      console.error("Error starting avatar session:", error);
+    } finally {
+      setIsLoadingSession(false);
+    }
+  }
+  async function handleSpeak() {
+    setIsLoadingRepeat(true);
+    if (!avatar.current) {
+      setDebug("Avatar API not initialized");
+
+      return;
+    }
+    // speak({ text: text, task_type: TaskType.REPEAT })
+    await avatar.current.speak({ text: text, taskType: TaskType.REPEAT, taskMode: TaskMode.SYNC }).catch((e) => {
+      setDebug(e.message);
+    });
+    setIsLoadingRepeat(false);
+  }
+  async function handleInterrupt() {
+    if (!avatar.current) {
+      setDebug("Avatar API not initialized");
+
+      return;
+    }
+    await avatar.current
+      .interrupt()
+      .catch((e) => {
+        setDebug(e.message);
+      });
+  }
+  async function endSession() {
+    await avatar.current?.stopAvatar();
+    setStream(undefined);
+  }
+
+  const handleChangeChatMode = useMemoizedFn(async (v: any) => {
+    if (v === chatMode) {
+      return;
+    }
+    if (v === "text_mode") {
+      avatar.current?.closeVoiceChat();
+    } else {
+      await avatar.current?.startVoiceChat();
+    }
+    setChatMode(v);
+  });
+
+  const previousText = usePrevious(text);
+  useEffect(() => {
+    if (!previousText && text) {
+      avatar.current?.startListening();
+    } else if (previousText && !text) {
+      avatar?.current?.stopListening();
+    }
+  }, [text, previousText]);
+
+  useEffect(() => {
+    return () => {
+      endSession();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (stream && mediaStream.current) {
+      mediaStream.current.srcObject = stream;
+      mediaStream.current.onloadedmetadata = () => {
+        mediaStream.current!.play();
+        setDebug("Playing");
+      };
+    }
+  }, [mediaStream, stream]);
+
+  return (
+    <div className="w-full flex flex-col gap-4">
+      <Card>
+        <CardBody className="h-[500px] flex flex-col justify-center items-center">
+          {stream ? (
+            <div className="h-[500px] w-[900px] justify-center items-center flex rounded-lg overflow-hidden">
+              <video
+                ref={mediaStream}
+                autoPlay
+                playsInline
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                }}
+              >
+                <track kind="captions" />
+              </video>
+              <div className="flex flex-col gap-2 absolute bottom-3 right-3">
+                <Button
+                  className="bg-gradient-to-tr from-indigo-500 to-indigo-300 text-white rounded-lg"
+                  size="md"
+                  variant="shadow"
+                  onClick={handleInterrupt}
+                >
+                  Interrupt task
+                </Button>
+                <Button
+                  className="bg-gradient-to-tr from-indigo-500 to-indigo-300  text-white rounded-lg"
+                  size="md"
+                  variant="shadow"
+                  onClick={endSession}
+                >
+                  End session
+                </Button>
+              </div>
+            </div>
+          ) : !isLoadingSession ? (
+            <div className="h-full justify-center items-center flex flex-col gap-8 w-[500px] self-center">
+              <div className="flex flex-col gap-2 w-full">
+                {/* <p className="text-sm font-medium leading-none">
+                  Custom Knowledge ID (optional)
+                </p>
+                <Input
+                  placeholder="Enter a custom knowledge ID"
+                  value={knowledgeId}
+                  onChange={(e: any) => setKnowledgeId(e.target.value)}
+                />
+                <Select
+                  placeholder="Or select one from these example styles"
+                  size="sm"
+                  label="Select Avatars"
+                  onChange={(e) => {
+                    setKnowledgeId(e.target.value);
+                  }}
+                >
+                  {KNOWLEDGE.map((knowledge: any) => (
+                    <SelectItem
+                      key={knowledge.knowledge_id}
+                      textValue={knowledge.knowledge_id}
+                    >
+                      {knowledge.name}
+                    </SelectItem>
+                  ))}
+                </Select> */}
+                <p className="text-sm font-medium leading-none">
+                  Custom Avatar ID (optional)
+                </p>
+                <Input
+                  placeholder="Enter a custom avatar ID"
+                  value={avatarId}
+                  onChange={(e: any) => setAvatarId(e.target.value)}
+                />
+                <Select
+                  placeholder="Or select one from these example avatars"
+                  size="sm"
+                  label="Select Avatars"
+                  onChange={(e) => {
+                    setAvatarId(e.target.value);
+                  }}
+                >
+                  {AVATARS.map((avatar: any) => (
+                    <SelectItem
+                      key={avatar.avatar_id}
+                      textValue={avatar.avatar_id}
+                    >
+                      {avatar.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+              <Button
+                className="bg-gradient-to-tr from-indigo-500 to-indigo-300 w-full text-white"
+                size="md"
+                variant="shadow"
+                onClick={startSession}
+              >
+                Start session
+              </Button>
+            </div>
+          ) : (
+            <Spinner color="default" size="lg" />
+          )}
+        </CardBody>
+        <Divider />
+        <CardFooter className="flex flex-col gap-3 relative">
+          <Tabs
+            aria-label="Options"
+            selectedKey={chatMode}
+            onSelectionChange={(v: any) => {
+              handleChangeChatMode(v);
+            }}
+          >
+            <Tab key="text_mode" title="Text mode" />
+            <Tab key="voice_mode" title="Voice mode" />
+          </Tabs>
+          {chatMode === "text_mode" ? (
+            <div className="w-full flex relative">
+              <InteractiveAvatarTextInput
+                disabled={!stream}
+                input={text}
+                label="Chat"
+                loading={isLoadingRepeat}
+                placeholder="Type something for the avatar to respond"
+                setInput={setText}
+                onSubmit={handleSpeak}
+              />
+              {text && (
+                <Chip className="absolute right-16 top-3">Listening</Chip>
+              )}
+            </div>
+          ) : (
+            <div className="w-full text-center">
+              <Button
+                isDisabled={!isUserTalking}
+                className="bg-gradient-to-tr from-indigo-500 to-indigo-300 text-white"
+                size="md"
+                variant="shadow"
+              >
+                {isUserTalking ? "Listening" : "Voice chat"}
+              </Button>
+            </div>
+          )}
+        </CardFooter>
+      </Card>
+      <p className="font-mono text-right">
+        <span className="font-bold">Console:</span>
+        <br />
+        {debug}
+      </p>
+    </div>
+  );
 }

@@ -10,7 +10,7 @@ export default function Header() {
     <Group w="100%" h="100%" px="md">
       <Box>
         <Title order={1} fw="900" fz="20">
-          {activeLink.label}
+          {activeLink?.label}
         </Title>
         <Flex gap="5" align="center">
           <Text mt="0" c="dimmed" fz="xs" component={Link} href="/dashboard">
@@ -18,12 +18,12 @@ export default function Header() {
           </Text>
           <ArrowRight size={10} />
           <Text mt="0" c="dimmed" fz="xs">
-            {activeLink.label}
+            {activeLink?.label}
           </Text>
         </Flex>
       </Box>
-      <ColorSchemeToggle ml="auto" mr="0" />
-      <ThemeIcon size="xl" variant="transparent" color="var(--mantine-color-text)" size="xl">
+      <ColorSchemeToggle  mr="0" />
+      <ThemeIcon size="xl" variant="transparent" color="var(--mantine-color-text)">
         <Bell size={20} weight="fill" />
       </ThemeIcon>
     </Group>
