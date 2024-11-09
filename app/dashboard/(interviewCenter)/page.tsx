@@ -2,8 +2,9 @@
 
 import { Box, Card, Divider, Grid, ScrollArea, Stack, Text } from '@mantine/core';
 import InteractiveAvatar from '@/components/AvatarChatInterface';
+import NewAvatarStreaming from '../../../components/NewAvatarStreaming';
 import StreamingEmbed from '@/components/StreamingEmbed';
-import UserMessage from '@/components/User/UserMessage/UserMessage';
+import UserMessage from '@/components/User/UserMessage/UserMessage'
 
 export default function DashboardPage() {
   return (
