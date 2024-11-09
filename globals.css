@@ -1,6 +1,19 @@
 :root {
   scroll-behavior: smooth;
 }
+.wmde-markdown {
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif !important;
+  /* Fallback fonts if custom font fails to load */
+}
 
 .classy-text,
 .artsy-text {

@@ -1,13 +1,17 @@
 'use client';
 
 import { Box, Card, Divider, Grid, ScrollArea, Stack, Text } from '@mantine/core';
+import InteractiveAvatar from '@/components/AvatarChatInterface';
+import StreamingEmbed from '@/components/StreamingEmbed';
 import UserMessage from '@/components/User/UserMessage/UserMessage';
 
 export default function DashboardPage() {
   return (
     <Box>
       <Grid>
-        <Grid.Col span={6}>Avatar Space</Grid.Col>
+        <Grid.Col span={6} style={{ position: 'relative' }}>
+          <StreamingEmbed />
+        </Grid.Col>
 
         <Grid.Col span={6}>
           <Card

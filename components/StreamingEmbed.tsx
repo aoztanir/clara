@@ -18,34 +18,36 @@ interface StreamingEmbedProps {
 const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
   useEffect(() => {
     // Type definitions for DOM elements
-    const host: string = "https://labs.heygen.com";
-    const url: string = host + "/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJlZjA4MDM5YTQxMzU0ZWQ1YTIwNTY1ZGI4%0D%0AOTkzNzNmMyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3Yz%0D%0AL2VmMDgwMzlhNDEzNTRlZDVhMjA1NjVkYjg5OTM3M2YzL2Z1bGwvMi4yL3ByZXZpZXdfdGFyZ2V0%0D%0ALndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjU5%0D%0AYmM3MjQ3MDc1OTRhOTliMGIzMzA5ZDQwOTczMmQxIiwidXNlcm5hbWUiOiJlOTg2ODRmMjA5NDQ0%0D%0ANGE0YmRmOTY1YjM5MmYyODg2NiJ9&inIFrame=1";
+    const host: string = 'https://labs.heygen.com';
+    const url: string =
+      host +
+      '/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJlZjA4MDM5YTQxMzU0ZWQ1YTIwNTY1ZGI4%0D%0AOTkzNzNmMyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3Yz%0D%0AL2VmMDgwMzlhNDEzNTRlZDVhMjA1NjVkYjg5OTM3M2YzL2Z1bGwvMi4yL3ByZXZpZXdfdGFyZ2V0%0D%0ALndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjU5%0D%0AYmM3MjQ3MDc1OTRhOTliMGIzMzA5ZDQwOTczMmQxIiwidXNlcm5hbWUiOiJlOTg2ODRmMjA5NDQ0%0D%0ANGE0YmRmOTY1YjM5MmYyODg2NiJ9&inIFrame=1';
 
     const initializeEmbed = (): (() => void) => {
       const clientWidth: number = document.body.clientWidth;
 
       // Create and configure wrapper div
-      const wrapDiv: HTMLDivElement = document.createElement("div");
-      wrapDiv.id = "heygen-streaming-embed";
+      const wrapDiv: HTMLDivElement = document.createElement('div');
+      wrapDiv.id = 'heygen-streaming-embed';
       if (className) wrapDiv.className = className;
 
       // Create container div
-      const container: HTMLDivElement = document.createElement("div");
-      container.id = "heygen-streaming-container";
+      const container: HTMLDivElement = document.createElement('div');
+      container.id = 'heygen-streaming-container';
 
       // Create and configure stylesheet
-      const stylesheet: HTMLStyleElement = document.createElement("style");
+      const stylesheet: HTMLStyleElement = document.createElement('style');
       stylesheet.innerHTML = `
         #heygen-streaming-embed {
-          z-index: 9999;
-          position: fixed;
-          left: 55%;
-          bottom: 17.5%;
-          width: 300px;
+          // z-index: 9999;
+          position: absolute;
+          top: 100px;
+          left: 100px;
+          width: 500px;
           height: 300px;
-          border-radius: 50%;
-          border: 2px solid #fff;
-          box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
+          // border-radius: 50%;
+          // border: 2px solid #fff;
+          // box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
           transition: all linear 0.1s;
           overflow: hidden;
           opacity: 0;
@@ -56,9 +58,7 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
           visibility: visible;
         }
         #heygen-streaming-embed.expand {
-          ${clientWidth < 540 
-            ? "height: 266px; width: 50%; left: 50%; transform: translateX(-50%);" 
-            : "height: 366px; width: calc(366px * 16 / 9); left: 62.5%; transform: translateX(-50%);"}
+       
           border: 0;
           border-radius: 8px;
         }
@@ -74,11 +74,11 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
       `;
 
       // Create and configure iframe
-      const iframe: HTMLIFrameElement = document.createElement("iframe");
+      const iframe: HTMLIFrameElement = document.createElement('iframe');
       iframe.allowFullscreen = false;
-      iframe.title = "Streaming Embed";
-      iframe.setAttribute('role', "dialog");
-      iframe.allow = "microphone";
+      iframe.title = 'Streaming Embed';
+      iframe.setAttribute('role', 'dialog');
+      iframe.allow = 'microphone';
       iframe.src = url;
 
       // State variables
@@ -87,26 +87,26 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
 
       // Message event handler
       const handleMessage = (e: MessageEvent): void => {
-        if (e.origin === host && e.data?.type === "streaming-embed") {
+        if (e.origin === host && e.data?.type === 'streaming-embed') {
           switch (e.data.action) {
-            case "init":
+            case 'init':
               initial = true;
-              wrapDiv.classList.toggle("show", initial);
+              wrapDiv.classList.toggle('show', initial);
               break;
-            case "show":
+            case 'show':
               visible = true;
-              wrapDiv.classList.toggle("expand", visible);
+              wrapDiv.classList.toggle('expand', visible);
               break;
-            case "hide":
+            case 'hide':
               visible = false;
-              wrapDiv.classList.toggle("expand", visible);
+              wrapDiv.classList.toggle('expand', visible);
               break;
           }
         }
       };
 
       // Add event listener
-      window.addEventListener("message", handleMessage as unknown as EventListener);
+      window.addEventListener('message', handleMessage as unknown as EventListener);
 
       // Append elements
       container.appendChild(iframe);
@@ -116,8 +116,8 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
 
       // Return cleanup function
       return () => {
-        window.removeEventListener("message", handleMessage as unknown as EventListener);
-        const embed = document.getElementById("heygen-streaming-embed");
+        window.removeEventListener('message', handleMessage as unknown as EventListener);
+        const embed = document.getElementById('heygen-streaming-embed');
         if (embed) {
           document.body.removeChild(embed);
         }

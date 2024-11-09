@@ -1,12 +1,18 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { AppShell, Burger, Group, Skeleton, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Header from '@/components/Header/Header';
 import { NavbarSearch } from '@/components/Navbar/Navbar';
+import { useUser } from '@/components/User/AuthProvider';
 import { useNavbarCompressedStore } from '@/stores/navbarCompressedStore';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { user } = useUser();
+  const router = useRouter();
+
+  if (!user && user !== 'loading') return router.push('/login');
   const [opened, { toggle }] = useDisclosure();
   const compressed = useNavbarCompressedStore((state) => state.compressed);
 

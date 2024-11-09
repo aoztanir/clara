@@ -25,6 +25,8 @@ import { useHover } from '@mantine/hooks';
 import { navbarLinks } from '@/Constants';
 import { useActiveLinkStore } from '@/stores/activeLinkStore';
 import { useNavbarCompressedStore } from '@/stores/navbarCompressedStore';
+import Logo from '../Logo/Logo';
+import { useUser } from '../User/AuthProvider';
 import { UserButton } from '../User/UserButton/UserButton';
 import classes from './NavbarSearch.module.css';
 
@@ -47,6 +49,7 @@ const collections = [
 ];
 
 export function NavbarSearch() {
+  const { logout } = useUser();
   const pathname = usePathname();
   const { hovered, ref } = useHover();
   const compressed = useNavbarCompressedStore((state) => state.compressed);
@@ -81,7 +84,9 @@ export function NavbarSearch() {
       // py="md"
     >
       <Box className={classes.section} px="md" pt={compressed ? 'md' : '0'}>
-        <UserButton compressed={compressed} />
+        <Box w="100%" h="100%">
+          <Logo nameIncluded={!compressed} />
+        </Box>
       </Box>
       <Divider my="sm" />
       <div className={classes.section}>
@@ -118,7 +123,7 @@ export function NavbarSearch() {
         p="md"
       >
         {compressed ? (
-          <ActionIcon size="50" radius="15px" mb="0" mt="auto" variant="default">
+          <ActionIcon size="50" radius="15px" mb="0" mt="auto" variant="default" onClick={logout}>
             <IconLogout
               color="var(--mantine-color-red-6)"
               style={{ transform: 'rotate(180deg)' }}
@@ -128,6 +133,7 @@ export function NavbarSearch() {
         ) : (
           <Button
             fullWidth
+            onClick={logout}
             mb="0"
             mt="auto"
             variant="default"

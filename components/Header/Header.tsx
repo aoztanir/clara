@@ -3,6 +3,7 @@ import { ArrowRight, Bell } from '@phosphor-icons/react';
 import { Box, Flex, Group, Text, ThemeIcon, Title } from '@mantine/core';
 import { useActiveLinkStore } from '@/stores/activeLinkStore';
 import { ColorSchemeToggle } from '../ColorSchemeToggle/ColorSchemeToggle';
+import { UserButton } from '../User/UserButton/UserButton';
 
 export default function Header() {
   const activeLink = useActiveLinkStore((state) => state.activeLink);
@@ -22,10 +23,19 @@ export default function Header() {
           </Text>
         </Flex>
       </Box>
-      <ColorSchemeToggle  mr="0" />
-      <ThemeIcon size="xl" variant="transparent" color="var(--mantine-color-text)">
-        <Bell size={20} weight="fill" />
-      </ThemeIcon>
+      <Group gap="xs" w="fit-content" mr="0" ml="auto">
+        <ColorSchemeToggle />
+        <ThemeIcon
+          size="xl"
+          mr="0"
+          ml="auto"
+          variant="transparent"
+          color="var(--mantine-color-text)"
+        >
+          <Bell size={20} weight="fill" />
+        </ThemeIcon>
+        <UserButton />
+      </Group>
     </Group>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { IconBrain, IconCoin, IconMicrophone } from '@tabler/icons-react';
 import {
   Button,
@@ -20,11 +21,10 @@ export default function HomePage() {
       <Stack>
         <Group justify="space-between" h="100%">
           {/* <Title order={2}>InterviewAI Assistant</Title> */}
-          <ColorSchemeToggle props={{}} />
         </Group>
 
         <Container size="lg" py="xl" style={{ flex: 1 }}>
-          <Stack align="center" spacing="xl">
+          <Stack align="center" gap="xl">
             <Title ta="center" order={1} size="3.5rem">
               Practice Interviews with AI
             </Title>
@@ -72,7 +72,13 @@ export default function HomePage() {
               </Card>
             </SimpleGrid>
 
-            <Button size="lg" radius="md">
+            <Button
+              size="lg"
+              radius="md"
+              component={Link}
+              href="/dashboard
+            "
+            >
               Start Practicing Now
             </Button>
           </Stack>
