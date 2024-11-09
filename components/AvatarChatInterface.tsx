@@ -1,6 +1,12 @@
 // app/components/AvatarChat.tsx
+<<<<<<< HEAD
 import { useEffect, useRef, useState } from 'react';
 import type { StartAvatarResponse } from '@heygen/streaming-avatar';
+=======
+'use client'
+import type { StartAvatarResponse } from "@heygen/streaming-avatar";
+
+>>>>>>> 5a29fb615d3b19915bdaaa1b5de5c1b81351ea22
 import StreamingAvatar, {
   AvatarQuality,
   StreamingEvents,
