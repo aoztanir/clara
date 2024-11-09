@@ -1,4 +1,5 @@
 // app/components/AvatarChat.tsx
+'use client'
 import type { StartAvatarResponse } from "@heygen/streaming-avatar";
 
 import StreamingAvatar, {
