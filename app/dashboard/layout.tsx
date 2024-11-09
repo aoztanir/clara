@@ -4,15 +4,17 @@ import { AppShell, Burger, Group, Skeleton, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import Header from '@/components/Header/Header';
 import { NavbarSearch } from '@/components/Navbar/Navbar';
+import { useNavbarCompressedStore } from '@/stores/navbarCompressedStore';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
+  const compressed = useNavbarCompressedStore((state) => state.compressed);
 
   return (
     <AppShell
       layout="alt"
       header={{ height: 70 }}
-      navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      navbar={{ width: compressed ? 70 : 250, breakpoint: 'sm', collapsed: { mobile: !opened } }}
       //   aside={{ width: 300, breakpoint: 'md', collapsed: { desktop: false, mobile: true } }}
       padding="md"
     >
@@ -22,7 +24,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
         </Group> */}
       </AppShell.Header>
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar
+        // p="xs"
+        p="0"
+        style={{
+          // overflow: 'hidden',
+          transition: 'width 100ms ease, min-width 100ms ease',
+        }}
+      >
         <NavbarSearch />
         {/* <Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />

@@ -5,7 +5,7 @@ import { Badge, Button, Card, Group, Image, SimpleGrid, Text } from '@mantine/co
 export default function ResourcesPage() {
   return (
     <>
-      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg" p="md">
+      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} spacing="lg">
         <Card shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section>
             <Image src="/images/leetcode.png" height={160} alt="LeetCode" />

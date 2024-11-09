@@ -1,36 +1,36 @@
 .navbar {
   background-color: var(--mantine-color-body);
-  height: rem(700px);
+  /* height: rem(700px); */
   width: rem(300px);
-  padding: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-xs);
   padding-top: 0;
   display: flex;
   flex-direction: column;
-  border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  /* border-right: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4)); */
 }
 
 .section {
-  margin-left: calc(var(--mantine-spacing-md) * -1);
-  margin-right: calc(var(--mantine-spacing-md) * -1);
-  margin-bottom: var(--mantine-spacing-md);
+  margin-left: calc(var(--mantine-spacing-xs) * -1);
+  margin-right: calc(var(--mantine-spacing-xs) * -1);
+  /* margin-bottom: var(--mantine-spacing-xs); */
 
-  &:not(:last-of-type) {
+  /* &:not(:last-of-type) {
     border-bottom: rem(1px) solid
       light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-  }
+  } */
 }
 
 .searchCode {
   font-weight: 700;
   font-size: rem(10px);
   background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-7));
-  border: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7));
+  /* border: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7)); */
 }
 
 .mainLinks {
-  padding-left: calc(var(--mantine-spacing-md) - var(--mantine-spacing-xs));
-  padding-right: calc(var(--mantine-spacing-md) - var(--mantine-spacing-xs));
-  padding-bottom: var(--mantine-spacing-md);
+  padding-left: calc(var(--mantine-spacing-xs) - var(--mantine-spacing-xs));
+  padding-right: calc(var(--mantine-spacing-xs) - var(--mantine-spacing-xs));
+  padding-bottom: var(--mantine-spacing-xs);
 }
 
 .mainLink {
@@ -68,8 +68,8 @@
 }
 
 .collections {
-  padding-left: calc(var(--mantine-spacing-md) - rem(6px));
-  padding-right: calc(var(--mantine-spacing-md) - rem(6px));
+  padding-left: calc(var(--mantine-spacing-xs) - rem(6px));
+  padding-right: calc(var(--mantine-spacing-xs) - rem(6px));
   padding-bottom: var(--mantine-spacing-md);
 }
 
