@@ -19,6 +19,7 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
+    "@heygen/streaming-avatar": "^2.0.7",
     "@mantine/core": "7.13.5",
     "@mantine/hooks": "7.13.5",
     "@next/bundle-analyzer": "^14.2.4",
