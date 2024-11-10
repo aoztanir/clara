@@ -54,7 +54,7 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `https://claro.study/dashboard`,
+          redirectTo: `https://claraprep.co/dashboard`,
         },
       });
       console.log(error);

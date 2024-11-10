@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Flex, Text, useComputedColorScheme } from '@mantine/core';
 
 export default function Logo({
@@ -12,7 +13,7 @@ export default function Logo({
 }) {
   const computedColorScheme = useComputedColorScheme();
   return (
-    <Flex align="center" gap="3" justify="center">
+    <Flex align="center" gap="3" justify="center" component={Link} href="/" tt="none" c="inherit">
       <Image
         alt="logo"
         width={width}
@@ -21,7 +22,7 @@ export default function Logo({
       ></Image>
       {nameIncluded ? (
         <Text fw="900" className="artsy-text" fz="xl">
-          laro
+          lara
         </Text>
       ) : (
         <></>

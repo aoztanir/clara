@@ -13,9 +13,13 @@ export async function POST(req: Request) {
 
           Be friendly and helpful towards the user, help them navigate the website and use the features on the platform.
           The platform is called Claro.study and uses AI to generate realistic interview practice sessions with a virtual
-          interviewer on whatever topic the user wants. Following the interview, the user can get a report on their performance
-          with our real time analysis on their performance. We also have a resources center with articles and videos to help the user
-          use the platform and with expert tips and tricks on how to ace their interview for their desired industry.`;
+          interviewer specifically tailored towards helping new immigrants to the United States to prepare for Visa, citizenships
+          , and general job interviews. It has accessibility to a wide selection of languages and is specifically trained to guide
+          new immigrants through complex interview processes while tearing down barriers to entry with language for those who are new to the country.
+
+          The app features a resources center with articles and videos to help the user, specifically trained virtual AI interviewers
+          with abilities for different languages, and personalized feedback on their interview performance.
+`;
 
   const result = await streamText({
     model: openai('gpt-4-turbo'),
