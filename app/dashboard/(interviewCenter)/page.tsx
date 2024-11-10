@@ -17,12 +17,8 @@ import {
 import InteractiveAvatar from '@/components/AvatarChatInterface';
 import NewAvatarStreaming from '../../../components/NewAvatarStreaming';
 import StreamingEmbed from '@/components/StreamingEmbed';
-<<<<<<< HEAD
 import { useUser } from '@/components/User/AuthProvider';
 import UserMessage from '@/components/User/UserMessage/UserMessage';
-=======
-import UserMessage from '@/components/User/UserMessage/UserMessage'
->>>>>>> ayev
 
 export default function DashboardPage() {
   const { user } = useUser();
