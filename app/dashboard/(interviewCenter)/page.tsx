@@ -20,32 +20,20 @@ import InterviewHistoryCard from '@/components/InterviewHistoryCard/InterviewHis
 import InterviewInteface from '@/components/InterviewInterface';
 import StreamingEmbed from '@/components/StreamingEmbed';
 import { useUser } from '@/components/User/AuthProvider';
-import { createClient } from '@/utils/supabase/client';
+// use interview interface to render interview
+import InterviewInteface from '@/components/InterviewInterface';
 
 export default function DashboardPage() {
   const { user } = useUser();
-  const supabase = createClient();
-  const [interviews, setInterviews] = useState([]);
-  const getInterviews = async () => {
-    const { data, error } = await supabase.from('interview').select('*');
-    setInterviews(data || []);
-  };
-
-  useEffect(() => {
-    getInterviews();
-  }, []);
-
   return (
     <Box h="100%">
       <Grid h="100%">
-        <Grid.Col span={4} style={{ position: 'relative', height: '100%' }}>
+        <Grid.Col span={6} style={{ position: 'relative', height: '100%' }}>
           <Stack gap="lg" h="100%">
-            <Card withBorder shadow="xl" padding="xl" radius="md">
-              <Text fz="30" fw={500} className="artsy-text">
-                Hi, {user?.user_metadata?.name?.split(' ')?.[0]}! I'm here to help you interview
-                better.
-              </Text>
-            </Card>
+            <Text fz="xl" fw={500} className="artsy-text">
+              Hi, {user?.user_metadata?.name?.split(' ')?.[0]}! I'm here to help you interview
+              better.
+            </Text>
 
             <Card
               component="button"
@@ -56,7 +44,7 @@ export default function DashboardPage() {
               style={{
                 width: '100%',
                 // aspectRatio: '1/1',
-                height: '70vh',
+                height: '100%',
                 cursor: 'pointer',
                 border: '2px dashed var(--mantine-color-gray-4)',
                 background: 'transparent',
@@ -88,14 +76,12 @@ export default function DashboardPage() {
           </Stack>
         </Grid.Col>
 
-        <Grid.Col span={8}>
+        <Grid.Col span={6}>
           <Text fw={500} mb="sm" fz="xl" className="artsy-text">
-            Past Interviews
+            Previous Interviews
           </Text>
-          <SimpleGrid cols={2}>
-            {interviews?.map((interview) => (
-              <InterviewHistoryCard key={interview.id} {...interview} />
-            ))}
+          <SimpleGrid cols={3}>
+            <InterviewHistoryCard />
           </SimpleGrid>
           {/* <Card
             h="90vh"
@@ -116,14 +102,31 @@ export default function DashboardPage() {
               </Text>
             </Box>
 
-            <Box style={{ overflowY: 'scroll', height: '100%' }} mt="35px">
-              <Stack gap="40">
-                <UserMessage username="user" />
-              </Stack>
-            </Box>
-          </Card> */}
-        </Grid.Col>
-      </Grid>
+              <Box style={{ overflowY: 'scroll', height: '100%' }} mt="35px">
+                <Stack gap="40">
+                  <UserMessage username="user" />
+                </Stack>
+              </Box>
+            </Card> */}
+          </Grid.Col>
+          </Grid>
+          
+        )}
+        {page === 'interview' && (
+          <Box w="100%">
+          <Grid h="100%" w='100%'>
+            <Grid.Col span={8}>
+              <InterviewInterface />
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Box>
+                <TranscriptionComponent />
+              </Box>
+            </Grid.Col>
+          </Grid>
+        </Box>
+        )}
+     </Grid>   
     </Box>
   );
 }
