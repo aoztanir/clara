@@ -28,22 +28,23 @@ export default withBundleAnalyzer({
         headers: [
           {
             key: 'Access-Control-Allow-Credentials',
-            value: 'true'
+            value: 'true',
           },
           {
             key: 'Access-Control-Allow-Origin',
-            value: '*' // In production, replace with your specific domain
+            value: '*', // In production, replace with your specific domain
           },
           {
             key: 'Access-Control-Allow-Methods',
-            value: 'GET,DELETE,PATCH,POST,PUT,OPTIONS'
+            value: 'GET,DELETE,PATCH,POST,PUT,OPTIONS',
           },
           {
             key: 'Access-Control-Allow-Headers',
-            value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-api-key'
-          }
-        ]
-      }
-    ]
-  }
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-api-key',
+          },
+        ],
+      },
+    ];
+  },
 });
