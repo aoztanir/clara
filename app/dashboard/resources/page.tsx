@@ -39,7 +39,12 @@ export default function ResourcesPage() {
 
     onError(error) {},
   });
-
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevents default action
+      handleSubmit(event); // Calls the submit function
+    }
+  };
   return (
     <>
       <Grid>
@@ -173,7 +178,7 @@ export default function ResourcesPage() {
               p="md"
               w="100%"
             >
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
                 <Textarea
                   // className="artsy-text"
 

@@ -1,10 +1,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-
 import { Avatar, Box, Card, Flex, Paper, Text } from '@mantine/core';
 
-// const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'));
+const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'));
 const UserMessage = ({ username = 'user', content = 'content', user = true }) => {
   if (!user) {
     return (
@@ -25,10 +24,10 @@ const UserMessage = ({ username = 'user', content = 'content', user = true }) =>
     <Flex align="bottom" gap="xs" mr="auto" ml="0">
       <Avatar mt="auto" mb="0" />
       <Paper style={{ borderBottomLeftRadius: '0' }} shadow="xl" bg="dark.7" radius="md" p="md">
-        {/* <MarkdownPreview
+        <MarkdownPreview
           source={content}
           style={{ color: 'white', background: 'transparent', wordBreak: 'break-word' }}
-        /> */}
+        />
       </Paper>
       {/* <Flex mt="xs" gap="5" align="center"> */}
 
