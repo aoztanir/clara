@@ -22,7 +22,7 @@ import Logo from '@/components/Logo/Logo';
 
 // We're building a product to help immigrants with interviews whether it be those for visa applications or those who want to apply for jobs and might have a difficult time doing so because they don't speak native language.  I want you to build me a landing page for this. it should include a header, Landing Section with a heading and a tagline explanation of what we do along with a screenshot of the product. Next I want you to build a features section which explains how we have a AI interview persona called Clara. The app is also called clara. I want you to then make an inspiration  section that talks about the inspiration for the app, since the team are all from immigrant background or are immigrants themselves. Then last I want you to make an about section that has an image and short bio  for our four members.  Last I want a footer. Things that say anything like "get started"
 //  should reroute using NextJS's link component to the /dashboard route. Additionally, I want you to use mantine for this whole thing. For headings and large text use className='artsy-text' for a cool affect.
-
+// last commit
 export default function HomePage() {
   return (
     <>
