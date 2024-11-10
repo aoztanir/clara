@@ -8,7 +8,12 @@ const withBundleAnalyzer = bundleAnalyzer({
 export default withBundleAnalyzer({
   reactStrictMode: false,
   images: {
-    domains: ['media.istockphoto.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'media.istockphoto.com',
+      },
+    ],
   },
   typescript: {
     ignoreBuildErrors: true,
