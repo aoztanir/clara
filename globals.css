@@ -14,6 +14,20 @@
     sans-serif !important;
   /* Fallback fonts if custom font fails to load */
 }
+.scale-on-hover:hover {
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
+.scale-on-hover {
+  transition: all 0.3s ease;
+}
+
+.artsy-text-no-bold {
+  font-family: 'DM Serif Text', serif;
+  font-optical-sizing: auto;
+
+  font-style: normal;
+}
 
 .classy-text,
 .artsy-text {

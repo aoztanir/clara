@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <AppShell
       layout="alt"
       header={{ height: 70 }}
-      navbar={{ width: compressed ? 70 : 250, breakpoint: 'sm', collapsed: { mobile: !opened } }}
+      navbar={{ width: compressed ? 80 : 250, breakpoint: 'sm', collapsed: { mobile: !opened } }}
       //   aside={{ width: 300, breakpoint: 'md', collapsed: { desktop: false, mobile: true } }}
       padding="md"
     >
