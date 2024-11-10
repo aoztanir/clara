@@ -14,11 +14,10 @@ import {
   Text,
   ThemeIcon,
 } from '@mantine/core';
-import InteractiveAvatar from '@/components/AvatarChatInterface';
 import StreamingEmbed from '@/components/StreamingEmbed';
 import { useUser } from '@/components/User/AuthProvider';
-import UserMessage from '@/components/User/UserMessage/UserMessage';
-import NewAvatarStreaming from '../../../components/NewAvatarStreaming';
+// use interview interface to render interview
+import InterviewInteface from '@/components/InterviewInterface';
 
 export default function DashboardPage() {
   const { user } = useUser();
