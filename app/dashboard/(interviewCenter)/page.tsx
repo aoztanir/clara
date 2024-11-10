@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Barbell } from '@phosphor-icons/react';
 import {
   Box,
@@ -14,22 +15,37 @@ import {
   Text,
   ThemeIcon,
 } from '@mantine/core';
-import StreamingEmbed from '@/components/StreamingEmbed';
-import { useUser } from '@/components/User/AuthProvider';
+import InterviewHistoryCard from '@/components/InterviewHistoryCard/InterviewHistoryCard';
 // use interview interface to render interview
 import InterviewInteface from '@/components/InterviewInterface';
+import StreamingEmbed from '@/components/StreamingEmbed';
+import { useUser } from '@/components/User/AuthProvider';
+import { createClient } from '@/utils/supabase/client';
 
 export default function DashboardPage() {
   const { user } = useUser();
+  const supabase = createClient();
+  const [interviews, setInterviews] = useState([]);
+  const getInterviews = async () => {
+    const { data, error } = await supabase.from('interview').select('*');
+    setInterviews(data || []);
+  };
+
+  useEffect(() => {
+    getInterviews();
+  }, []);
+
   return (
     <Box h="100%">
       <Grid h="100%">
-        <Grid.Col span={6} style={{ position: 'relative', height: '100%' }}>
+        <Grid.Col span={4} style={{ position: 'relative', height: '100%' }}>
           <Stack gap="lg" h="100%">
-            <Text fz="xl" fw={500} className="artsy-text">
-              Hi, {user?.user_metadata?.name?.split(' ')?.[0]}! I'm here to help you interview
-              better.
-            </Text>
+            <Card withBorder shadow="xl" padding="xl" radius="md">
+              <Text fz="30" fw={500} className="artsy-text">
+                Hi, {user?.user_metadata?.name?.split(' ')?.[0]}! I'm here to help you interview
+                better.
+              </Text>
+            </Card>
 
             <Card
               component="button"
@@ -40,7 +56,7 @@ export default function DashboardPage() {
               style={{
                 width: '100%',
                 // aspectRatio: '1/1',
-                height: '100%',
+                height: '70vh',
                 cursor: 'pointer',
                 border: '2px dashed var(--mantine-color-gray-4)',
                 background: 'transparent',
@@ -72,12 +88,14 @@ export default function DashboardPage() {
           </Stack>
         </Grid.Col>
 
-        <Grid.Col span={6}>
+        <Grid.Col span={8}>
           <Text fw={500} mb="sm" fz="xl" className="artsy-text">
-            Previous Interviews
+            Past Interviews
           </Text>
-          <SimpleGrid cols={3}>
-            <InterviewHistoryCard />
+          <SimpleGrid cols={2}>
+            {interviews?.map((interview) => (
+              <InterviewHistoryCard key={interview.id} {...interview} />
+            ))}
           </SimpleGrid>
           {/* <Card
             h="90vh"
@@ -109,23 +127,3 @@ export default function DashboardPage() {
     </Box>
   );
 }
-
-const InterviewHistoryCard = () => {
-  return (
-    <Card padding="md" radius="md" withBorder style={{}} shadow="xl">
-      <Flex justify="space-between" align="baseline">
-        <Box>
-          <Text fz="md" fw={'bold'}>
-            Technical Interview Practice
-          </Text>
-          <Text size="xs" c="dimmed">
-            Completed on Jan 15, 2024
-          </Text>
-        </Box>
-        <ThemeIcon variant="transparent" p="0" mb="0" mr={'0'}>
-          <Barbell weight="fill" size={18} />
-        </ThemeIcon>
-      </Flex>
-    </Card>
-  );
-};

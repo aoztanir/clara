@@ -8,7 +8,7 @@ import { AuthProvider } from '@/components/User/AuthProvider';
 import { theme } from '../theme';
 
 export const metadata = {
-  title: 'Claro | Hone Your Interview Skills For Free',
+  title: 'Clara | Build Your English Interview Skills For Free',
   // description: 'I am using Mantine with Next.js!',
 };
 

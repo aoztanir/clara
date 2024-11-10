@@ -13,7 +13,16 @@ export default function Logo({
 }) {
   const computedColorScheme = useComputedColorScheme();
   return (
-    <Flex align="center" gap="3" justify="center" component={Link} href="/" tt="none" c="inherit">
+    <Flex
+      align="center"
+      gap="3"
+      justify="center"
+      component={Link}
+      href="/"
+      tt="none"
+      c="inherit"
+      style={{ textDecoration: 'none' }}
+    >
       <Image
         alt="logo"
         width={width}

@@ -3,8 +3,20 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { IconBrandGoogle } from '@tabler/icons-react';
-import { Button, Card, Container, Grid, Paper, Stack, Text, Title } from '@mantine/core';
+import { MicrosoftOutlookLogo } from '@phosphor-icons/react';
+import { IconBrandApple, IconBrandGithub, IconBrandGoogle } from '@tabler/icons-react';
+import {
+  Button,
+  Card,
+  Container,
+  Divider,
+  Grid,
+  Paper,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { useUser } from '@/components/User/AuthProvider';
 import { createClient } from '@/utils/supabase/client';
 
@@ -54,7 +66,10 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `https://claraprep.co/dashboard`,
+          redirectTo:
+            process.env.NODE_ENV === 'production'
+              ? `https://claraprep.co/dashboard`
+              : `http://localhost:3000/dashboard`,
         },
       });
       console.log(error);
@@ -66,28 +81,73 @@ export default function LoginPage() {
   };
 
   if (user === 'loading') return null;
-
   return (
     <Container size="xs" style={{ height: '100vh' }}>
       <Stack justify="center" style={{ height: '100%' }} gap="lg">
-        <Card shadow="sm" padding="lg" radius="md" withBorder>
-          <Stack gap="md">
-            <Title order={2} ta="center">
-              Welcome Back
-            </Title>
-            <Text c="dimmed" size="sm" ta="center">
-              Sign in to continue to your dashboard
-            </Text>
+        <Card shadow="xl" padding="xl" radius="md" withBorder>
+          <Stack gap="xl">
+            <Stack gap={0}>
+              <Title order={2} ta="center" className="artsy-text">
+                Clara can't wait to meet you!
+              </Title>
+              <Text c="dimmed" size="sm" ta="center">
+                Sign in to start practicing your interview skills
+              </Text>
+            </Stack>
 
-            <Button
-              variant="filled"
-              color="indigo"
-              leftSection={<IconBrandGoogle size={20} />}
-              onClick={handleGoogleLogin}
-              fullWidth
-            >
-              Continue with Google
-            </Button>
+            <Divider label="Continue with" labelPosition="center" />
+
+            <Stack gap="md">
+              <Button
+                variant="default"
+                leftSection={<IconBrandGoogle size={20} />}
+                onClick={handleGoogleLogin}
+                fullWidth
+                size="md"
+              >
+                Google
+              </Button>
+
+              <Tooltip label="Coming soon!" position="right">
+                <Button
+                  variant="default"
+                  leftSection={<IconBrandGithub size={20} />}
+                  fullWidth
+                  size="md"
+                  disabled
+                >
+                  GitHub
+                </Button>
+              </Tooltip>
+
+              <Tooltip label="Coming soon!" position="right">
+                <Button
+                  variant="default"
+                  leftSection={<MicrosoftOutlookLogo size={20} />}
+                  fullWidth
+                  size="md"
+                  disabled
+                >
+                  Microsoft
+                </Button>
+              </Tooltip>
+
+              <Tooltip label="Coming soon!" position="right">
+                <Button
+                  variant="default"
+                  leftSection={<IconBrandApple size={20} />}
+                  fullWidth
+                  size="md"
+                  disabled
+                >
+                  Apple
+                </Button>
+              </Tooltip>
+            </Stack>
+
+            <Text size="xs" c="dimmed" ta="center">
+              By continuing, you agree to our Terms of Service and Privacy Policy
+            </Text>
           </Stack>
         </Card>
       </Stack>

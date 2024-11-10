@@ -36,44 +36,67 @@ const links = [
   { icon: IconCheckbox, label: 'Tasks', notifications: 4 },
   { icon: IconUser, label: 'Contacts' },
 ];
-
 const resourceLinks = [
-  { emoji: '📝', label: 'LeetCode Problems', href: 'https://leetcode.com/problemset/all/' },
   {
-    emoji: '💼',
-    label: 'Glassdoor Interviews',
-    href: 'https://www.glassdoor.com/Interview/index.htm',
+    emoji: '🗣️',
+    label: 'English Interview Phrases',
+    href: 'https://www.fluentu.com/blog/english/english-interview-phrases/',
   },
   {
-    emoji: '🧠',
-    label: 'HackerRank Practice',
-    href: 'https://www.hackerrank.com/interview/preparation-kits',
+    emoji: '🎯',
+    label: 'Cultural Interview Tips',
+    href: 'https://www.indeed.com/career-advice/interviewing/cultural-differences-in-job-interviews',
+  },
+  {
+    emoji: '📝',
+    label: 'Resume Writing for ESL',
+    href: 'https://www.internationalstudent.com/resume-writing/',
+  },
+  {
+    emoji: '🌎',
+    label: 'Work Visa Guide',
+    href: 'https://www.immi-usa.com/work-visa/',
+  },
+  {
+    emoji: '💼',
+    label: 'International Job Search',
+    href: 'https://www.goabroad.com/articles/jobs-abroad/international-job-search',
+  },
+  {
+    emoji: '🤝',
+    label: 'Business English Resources',
+    href: 'https://www.businessenglishresources.com/',
+  },
+  {
+    emoji: '🎭',
+    label: 'Mock Interviews for ESL',
+    href: 'https://www.preply.com/en/learn/english/interview-preparation',
   },
   {
     emoji: '📚',
-    label: 'GeeksForGeeks',
-    href: 'https://www.geeksforgeeks.org/interview-preparation/',
+    label: 'Professional English Course',
+    href: 'https://www.coursera.org/learn/business-english',
   },
-  { emoji: '🎯', label: 'AlgoExpert', href: 'https://www.algoexpert.io/product' },
   {
-    emoji: '🗣️',
-    label: 'Indeed Interviews',
-    href: 'https://www.indeed.com/career-advice/interviewing',
+    emoji: '⭐',
+    label: 'Accent Reduction Tips',
+    href: 'https://www.verbling.com/articles/post/accent-reduction-tips/',
   },
-  { emoji: '💡', label: 'InterviewBit', href: 'https://www.interviewbit.com/practice/' },
   {
-    emoji: '📊',
-    label: 'System Design Primer',
-    href: 'https://github.com/donnemartin/system-design-primer',
+    emoji: '💡',
+    label: 'Cross-Cultural Communication',
+    href: 'https://www.mindtools.com/CommSkll/Cross-Cultural-communication.htm',
   },
-  { emoji: '🎭', label: 'Pramp Mock Interviews', href: 'https://www.pramp.com/' },
   {
-    emoji: '⚡',
-    label: 'Behavioral Questions',
-    href: 'https://www.themuse.com/advice/behavioral-interview-questions-answers-examples',
+    emoji: '🌟',
+    label: 'Immigration Resources',
+    href: 'https://www.uscis.gov/working-in-the-united-states',
   },
-  { emoji: '🔧', label: 'Tech Interview Handbook', href: 'https://www.techinterviewhandbook.org/' },
-  { emoji: '📈', label: 'Levels.fyi Interviews', href: 'https://www.levels.fyi/interviews/' },
+  {
+    emoji: '🤔',
+    label: 'Common Interview Questions',
+    href: 'https://www.thebalancemoney.com/top-interview-questions-for-esl-learners-4173756',
+  },
 ];
 
 const collections = [
@@ -109,7 +132,6 @@ export function NavbarSearch() {
       // style={{ zIndex: 10000000000000 }}
       target="_blank"
       href={collection.href}
-      onClick={(event) => event.preventDefault()}
       key={collection.label}
       className={classes.collectionLink}
     >

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Avatar,
   Box,
@@ -15,8 +16,78 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
+import { useUser } from '@/components/User/AuthProvider';
+import { createClient } from '@/utils/supabase/client';
 
 export default function SettingsPage() {
+  const { user } = useUser();
+  const supabase = createClient();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: user?.user_metadata?.name || '',
+    email: user?.email || '',
+    timezone: user?.user_metadata?.timezone || 'America/New_York',
+    email_notifications: user?.user_metadata?.email_notifications || true,
+    browser_notifications: user?.user_metadata?.browser_notifications || true,
+    sms_notifications: user?.user_metadata?.sms_notifications || false,
+    two_factor_enabled: user?.user_metadata?.two_factor_enabled || false,
+  });
+
+  const handleUpdateProfile = async () => {
+    try {
+      setLoading(true);
+
+      // Update auth user metadata
+      const { data: authUpdate, error: authError } = await supabase.auth.updateUser({
+        data: {
+          name: formData.full_name,
+          timezone: formData.timezone,
+          email_notifications: formData.email_notifications,
+          browser_notifications: formData.browser_notifications,
+          sms_notifications: formData.sms_notifications,
+          two_factor_enabled: formData.two_factor_enabled,
+        },
+      });
+
+      if (authError) throw authError;
+
+      // Update profile record
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          full_name: formData.full_name,
+          timezone: formData.timezone,
+          email_notifications: formData.email_notifications,
+          browser_notifications: formData.browser_notifications,
+          sms_notifications: formData.sms_notifications,
+          two_factor_enabled: formData.two_factor_enabled,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', user?.id);
+
+      if (profileError) throw profileError;
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.from('profiles').delete().eq('id', user?.id);
+
+      if (error) throw error;
+
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Error deleting account:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box p="xl">
       <Text size="xl" fw={700} mb="lg" className="artsy-text">
@@ -31,26 +102,25 @@ export default function SettingsPage() {
 
           <Stack>
             <Group>
-              <Avatar
-                size="xl"
-                radius="xl"
-                src="https://media.istockphoto.com/id/1359838986/photo/the-manager-is-reading-the-resume-and-is-interviewing-the-new-employee-negotiating-business.jpg?s=612x612&w=0&k=20&c=x6gpp9jg1zb0rJ3Xnvor4dZT8-mAGQ4XAza4y3cN_-w="
-              />
+              <Avatar size="xl" radius="xl" src={user?.user_metadata?.avatar_url} />
               <Button variant="light">Change Avatar</Button>
             </Group>
 
-            <TextInput label="Full Name" placeholder="John Doe" defaultValue="John Doe" />
-
             <TextInput
-              label="Email"
-              placeholder="john@example.com"
-              defaultValue="john@example.com"
+              label="Full Name"
+              value={formData.full_name}
+              onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
             />
+
+            <TextInput label="Email" value={formData.email} disabled />
 
             <Select
               label="Time Zone"
               placeholder="Select timezone"
-              defaultValue="America/New_York"
+              value={formData.timezone}
+              onChange={(value) =>
+                setFormData({ ...formData, timezone: value || 'America/New_York' })
+              }
               data={[
                 { value: 'America/New_York', label: 'Eastern Time (ET)' },
                 { value: 'America/Chicago', label: 'Central Time (CT)' },
@@ -59,7 +129,9 @@ export default function SettingsPage() {
               ]}
             />
 
-            <Button>Save Changes</Button>
+            <Button onClick={handleUpdateProfile} loading={loading}>
+              Save Changes
+            </Button>
           </Stack>
         </Card>
 
@@ -83,6 +155,10 @@ export default function SettingsPage() {
             <Switch
               label="Enable 2FA"
               description="Add an extra layer of security to your account"
+              checked={formData.two_factor_enabled}
+              onChange={(e) =>
+                setFormData({ ...formData, two_factor_enabled: e.currentTarget.checked })
+              }
             />
 
             <Divider my="md" />
@@ -91,12 +167,36 @@ export default function SettingsPage() {
               Notifications
             </Text>
             <Stack gap="xs">
-              <Switch label="Email notifications" defaultChecked />
-              <Switch label="Browser notifications" defaultChecked />
-              <Switch label="SMS notifications" />
+              <Switch
+                label="Email notifications"
+                checked={formData.email_notifications}
+                onChange={(e) =>
+                  setFormData({ ...formData, email_notifications: e.currentTarget.checked })
+                }
+              />
+              <Switch
+                label="Browser notifications"
+                checked={formData.browser_notifications}
+                onChange={(e) =>
+                  setFormData({ ...formData, browser_notifications: e.currentTarget.checked })
+                }
+              />
+              <Switch
+                label="SMS notifications"
+                checked={formData.sms_notifications}
+                onChange={(e) =>
+                  setFormData({ ...formData, sms_notifications: e.currentTarget.checked })
+                }
+              />
             </Stack>
 
-            <Button color="red" variant="light" mt="md">
+            <Button
+              color="red"
+              variant="light"
+              mt="md"
+              loading={loading}
+              onClick={handleDeleteAccount}
+            >
               Delete Account
             </Button>
           </Stack>
