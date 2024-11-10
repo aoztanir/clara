@@ -15,7 +15,7 @@ export const generateInterviewScores = async (transcriptionText: string) => {
       content: `
           You are an interviewer for a specific job. Analyze the following interview and give it a score out of 100 in each of the following categories:
           Overall, Accuracy, Detail, Concision.
-          Format scores as: 98, 67, 85, 92 (no extra text).
+          Format scores as: 98, 67, 85, 92 (no extra text). STOP GENERATING ALL any other text it should just be 4 numbers separated by commas.
         `,
     },
     { role: 'user', content: `Here is the transcription:\n\n"""${transcriptionText}"""` },
@@ -23,7 +23,7 @@ export const generateInterviewScores = async (transcriptionText: string) => {
 
   try {
     const response = await openAIClient.chat.completions.create({
-      model: 'gpt-4', // or 'gpt-3.5-turbo'
+      model: 'gpt-3.5-turbo', // or 'gpt-3.5-turbo'
       messages,
       temperature: 0.7,
     });
@@ -71,7 +71,7 @@ Please provide the report in a clear and organized format.
   ];
   try {
     const response = await openAIClient.chat.completions.create({
-      model: 'gpt-4', // or 'gpt-3.5-turbo'
+      model: 'gpt-3.5-turbo', // or 'gpt-3.5-turbo'
       messages,
       temperature: 0.7,
     });
@@ -104,7 +104,7 @@ export const generateTranscriptionTags = async (transcriptionText: string) => {
 
   try {
     const response = await openAIClient.chat.completions.create({
-      model: 'gpt-4o', // or 'gpt-3.5-turbo'
+      model: 'gpt-3.5-turbo', // or 'gpt-3.5-turbo'
       messages,
       temperature: 0.7,
     });
@@ -146,7 +146,7 @@ export const generateTranscriptionTitle = async (transcriptionText: string) => {
 
   try {
     const response = await openAIClient.chat.completions.create({
-      model: 'gpt-4o', // or 'gpt-3.5-turbo'
+      model: 'gpt-3.5-turbo', // or 'gpt-3.5-turbo'
       messages,
       temperature: 0.7,
     });
