@@ -135,7 +135,7 @@ export default function InterviewPage({ params }: { params: { id: string } }) {
         {loadingScores ? (
           <Loader color="var(--mantine-color-red-7)" type="bars" />
         ) : (
-          scores.map((score, index) => (
+          scores?.map((score, index) => (
             <div key={index} style={{ textAlign: 'center' }}>
               <RingProgress
                 sections={[{ value: score, color: ['blue', 'red', 'teal', 'yellow']?.[index] }]}
