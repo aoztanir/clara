@@ -170,14 +170,14 @@ export const generateInterviewData = async (transcriptionText: string, id = null
   if (id) {
     const { data: upsertData, error } = await supabase
       .from('interview')
-      .upsert({
+      .update({
         name: title,
         feedback_report: report,
         feedback_ratings: scores,
         tags: tags,
         transcript: transcriptionText,
-        id: id,
       })
+      .eq('id', id)
       .select()
       .maybeSingle();
     data = upsertData;

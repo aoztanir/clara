@@ -69,13 +69,15 @@ export default function InterviewPage({ params }: { params: { id: string } }) {
 
     const { data, error } = await supabase.from('interview').select('*').eq('id', id).maybeSingle();
     setActiveLink({ href: '/dashboard/history', label: data?.name });
+    console.log(error);
     setInterview(data);
+
     setScores(data?.feedback_ratings);
     setReport(data?.feedback_report);
 
-    if (!data?.feedback_ratings || !data?.feedback_report) {
-      handleInterviewReport();
-    }
+    // if (!data?.feedback_ratings || !data?.feedback_report) {
+    //   handleInterviewReport();
+    // }
   };
   useEffect(() => {
     getInterview();
@@ -88,6 +90,8 @@ export default function InterviewPage({ params }: { params: { id: string } }) {
   const handleInterviewReport = async () => {
     setLoadingReport(true);
     setLoadingScores(true);
+    console.log(interview);
+
     const { report, scores } = await generateInterviewData(interview?.transcript, interview?.id);
     setReport(report);
     setScores(scores);
