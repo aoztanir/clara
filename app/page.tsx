@@ -37,7 +37,7 @@ export default function HomePage() {
       </Container>
 
       {/* Hero Section */}
-      <Container size="xl" py={60}>
+      <Container size="xl" py={60} px="xl">
         <Grid gutter={40} align="center">
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Stack gap="xl">
@@ -87,7 +87,7 @@ export default function HomePage() {
 
           <SimpleGrid cols={{ base: 1, sm: 3 }} spacing={30}>
             <Card shadow="sm" padding="lg" radius="md" withBorder className="scale-on-hover">
-              <ThemeIcon size={40} radius="md" mb="md" variant="light">
+              <ThemeIcon size={40} radius="md" mb="md" variant="light" style={{ margin: '0 auto' }}>
                 <IconMicrophone size={20} />
               </ThemeIcon>
               <Text fw={500} size="xl" mb="sm" className="artsy-text">
@@ -100,7 +100,7 @@ export default function HomePage() {
             </Card>
 
             <Card shadow="sm" padding="lg" radius="md" withBorder className="scale-on-hover">
-              <ThemeIcon size={40} radius="md" mb="md" variant="light">
+              <ThemeIcon size={40} radius="md" mb="md" variant="light" style={{ margin: '0 auto' }}>
                 <IconBrain size={20} />
               </ThemeIcon>
               <Text fw={500} size="xl" mb="sm" className="artsy-text">
@@ -113,7 +113,7 @@ export default function HomePage() {
             </Card>
 
             <Card shadow="sm" padding="lg" radius="md" withBorder className="scale-on-hover">
-              <ThemeIcon size={40} radius="md" mb="md" variant="light">
+              <ThemeIcon size={40} radius="md" mb="md" variant="light" style={{ margin: '0 auto' }}>
                 <IconWorld size={20} />
               </ThemeIcon>
               <Text fw={500} size="xl" mb="sm" className="artsy-text">
