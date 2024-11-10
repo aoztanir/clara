@@ -6,15 +6,32 @@ import Logo from '@/components/Logo/Logo';
 import { useUser } from '../AuthProvider';
 
 const MarkdownPreview = dynamic(() => import('@uiw/react-markdown-preview'));
-const UserMessage = ({ username = 'user', content = 'content', user = true }) => {
+const UserMessage = ({
+  username = 'user',
+  content = 'content',
+  user = true,
+  bgNormal = false,
+  ...props
+}) => {
   const { user: userProfile } = useUser();
   if (!user) {
     return (
-      <Flex align="flex-end" gap="xs" ml="auto" mr="0">
-        <Paper style={{ borderBottomRightRadius: '0' }} shadow="xl" bg="gray.2" radius="md" p="md">
+      <Flex align="flex-end" gap="xs" ml="auto" mr="0" {...props}>
+        <Paper
+          withBorder
+          style={{ borderBottomRightRadius: '0' }}
+          shadow="xl"
+          bg={bgNormal ? '' : 'gray.2'}
+          radius="md"
+          p="md"
+        >
           <MarkdownPreview
             source={content}
-            style={{ color: 'black', background: 'transparent', wordBreak: 'break-word' }}
+            style={{
+              color: bgNormal ? 'var(--mantine-color-text)' : 'black',
+              background: 'transparent',
+              wordBreak: 'break-word',
+            }}
           />
         </Paper>
         {/* <Flex mr="0" ml="auto" gap="5" align="center" w="fit-content"> */}

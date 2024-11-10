@@ -8,7 +8,9 @@ import {
   Divider,
   Flex,
   Grid,
+  Group,
   Image,
+  List,
   ScrollArea,
   SimpleGrid,
   Stack,
@@ -18,17 +20,52 @@ import {
 import InterviewHistoryCard from '@/components/InterviewHistoryCard/InterviewHistoryCard';
 // use interview interface to render interview
 import InterviewInteface from '@/components/InterviewInterface';
+import InterviewInterface from '@/components/InterviewInterface';
 import StreamingEmbed from '@/components/StreamingEmbed';
+import TranscriptionComponent from '@/components/TranscriptionComponent';
 import { useUser } from '@/components/User/AuthProvider';
+import { createClient } from '@/utils/supabase/client';
+
 // use interview interface to render interview
-import InterviewInteface from '@/components/InterviewInterface';
 
 export default function DashboardPage() {
+  const supabase = createClient();
   const { user } = useUser();
+  const [page, setPage] = useState<'interview' | 'history'>('history');
+  const [interviews, setInterviews] = useState([]);
+  const getInterviews = async () => {
+    const { data, error } = await supabase
+      .from('interview')
+      .select('*')
+      .order('created_at', { ascending: false });
+    setInterviews(data || []);
+  };
+  useEffect(() => {
+    getInterviews();
+  }, []);
+
+  if (page === 'interview') {
+    return (
+      <>
+        <Box w="100%">
+          <Grid h="100%" w="100%">
+            <Grid.Col span={8}>
+              <InterviewInterface />
+            </Grid.Col>
+            <Grid.Col span={4}>
+              <Box>
+                <TranscriptionComponent />
+              </Box>
+            </Grid.Col>
+          </Grid>
+        </Box>
+      </>
+    );
+  }
   return (
     <Box h="100%">
       <Grid h="100%">
-        <Grid.Col span={6} style={{ position: 'relative', height: '100%' }}>
+        <Grid.Col span={4} style={{ position: 'relative', height: '100%' }}>
           <Stack gap="lg" h="100%">
             <Text fz="xl" fw={500} className="artsy-text">
               Hi, {user?.user_metadata?.name?.split(' ')?.[0]}! I'm here to help you interview
@@ -38,9 +75,11 @@ export default function DashboardPage() {
             <Card
               component="button"
               shadow="xl"
+              onClick={() => setPage('interview')}
               padding="xl"
               radius="md"
               withBorder
+              h="80vh"
               style={{
                 width: '100%',
                 // aspectRatio: '1/1',
@@ -71,62 +110,59 @@ export default function DashboardPage() {
                   }
                   alt="interview"
                 ></Image>
+                <Stack mt="xl" gap="xs">
+                  <Text fw={700} size="lg" mb={4}>
+                    How it works:
+                  </Text>
+                  <SimpleGrid cols={2}>
+                    <Card shadow="sm" padding="sm" radius="md" withBorder>
+                      <Text size="sm" fw="900">
+                        Step 1
+                      </Text>
+                      <Text size="sm">Click "New Interview" to begin your practice session</Text>
+                    </Card>
+                    <Card shadow="sm" padding="sm" radius="md" withBorder>
+                      <Text size="sm" fw="900">
+                        Step 2
+                      </Text>
+                      <Text size="sm">
+                        Speak naturally - your responses will be transcribed in real-time using AI
+                      </Text>
+                    </Card>
+                    <Card shadow="sm" padding="sm" radius="md" withBorder>
+                      <Text size="sm" fw="900">
+                        Step 3
+                      </Text>
+                      <Text size="sm">
+                        When you're done, click "End Interview" to get instant AI feedback
+                      </Text>
+                    </Card>
+                    <Card shadow="sm" padding="sm" radius="md" withBorder>
+                      <Text size="sm" fw="900">
+                        Step 4
+                      </Text>
+                      <Text size="sm">
+                        Get a detailed report with scores, analysis, and personalized tips for
+                        improvement
+                      </Text>
+                    </Card>
+                  </SimpleGrid>
+                </Stack>
               </Box>
             </Card>
           </Stack>
         </Grid.Col>
-
-        <Grid.Col span={6}>
+        <Grid.Col span={8}>
           <Text fw={500} mb="sm" fz="xl" className="artsy-text">
             Previous Interviews
           </Text>
-          <SimpleGrid cols={3}>
-            <InterviewHistoryCard />
+          <SimpleGrid cols={2} spacing="lg">
+            {interviews?.map((interview) => (
+              <InterviewHistoryCard key={interview.id} {...interview} />
+            ))}
           </SimpleGrid>
-          {/* <Card
-            h="90vh"
-            shadow="xl"
-            padding="md"
-            radius="lg"
-            withBorder
-            style={{ position: 'relative' }}
-          >
-            <Box
-              w="100%"
-              style={{ position: 'absolute', top: 0, left: 0, background: 'inherit', zIndex: 100 }}
-              px="md"
-              pt="xs"
-            >
-              <Text fz="xl" fw="900" className="artsy-text">
-                Transcript
-              </Text>
-            </Box>
-
-              <Box style={{ overflowY: 'scroll', height: '100%' }} mt="35px">
-                <Stack gap="40">
-                  <UserMessage username="user" />
-                </Stack>
-              </Box>
-            </Card> */}
-          </Grid.Col>
-          </Grid>
-          
-        )}
-        {page === 'interview' && (
-          <Box w="100%">
-          <Grid h="100%" w='100%'>
-            <Grid.Col span={8}>
-              <InterviewInterface />
-            </Grid.Col>
-            <Grid.Col span={4}>
-              <Box>
-                <TranscriptionComponent />
-              </Box>
-            </Grid.Col>
-          </Grid>
-        </Box>
-        )}
-     </Grid>   
+        </Grid.Col>
+      </Grid>
     </Box>
   );
 }

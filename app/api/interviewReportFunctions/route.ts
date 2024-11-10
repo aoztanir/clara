@@ -158,6 +158,7 @@ export const generateTranscriptionTitle = async (transcriptionText: string) => {
 };
 
 export const generateInterviewData = async (transcriptionText: string, id = null) => {
+  console.log(transcriptionText);
   const supabase = await createClient();
 
   const title = await generateTranscriptionTitle(transcriptionText);
@@ -165,16 +166,35 @@ export const generateInterviewData = async (transcriptionText: string, id = null
   const scores = (await generateInterviewScores(transcriptionText))?.split(', ');
   const tags = await generateTranscriptionTags(transcriptionText);
 
-  const { data, error } = await supabase.from('interview').upsert({
-    name: title,
-    feedback_report: report,
-    feedback_ratings: scores,
-    tags: tags,
-    transcript: transcriptionText,
-    id: id,
-  });
-  console.log(data);
+  let data;
+  if (id) {
+    const { data: upsertData, error } = await supabase
+      .from('interview')
+      .upsert({
+        name: title,
+        feedback_report: report,
+        feedback_ratings: scores,
+        tags: tags,
+        transcript: transcriptionText,
+        id: id,
+      })
+      .select()
+      .maybeSingle();
+    data = upsertData;
+  } else {
+    const { data: insertData, error } = await supabase
+      .from('interview')
+      .insert({
+        name: title,
+        feedback_report: report,
+        feedback_ratings: scores,
+        tags: tags,
+        transcript: transcriptionText,
+      })
+      .select()
+      .maybeSingle();
+    data = insertData;
+  }
 
-  if (error) throw error;
-  return { title, tags, report, scores };
+  return { title, tags, report, scores, id: data?.id };
 };

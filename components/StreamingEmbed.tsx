@@ -19,7 +19,7 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
     const host: string = 'https://labs.heygen.com';
     const url: string =
       host +
-      '/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJlZjA4MDM5YTQxMzU0ZWQ1YTIwNTY1ZGI4%0D%0AOTkzNzNmMyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3Yz%0D%0AL2VmMDgwMzlhNDEzNTRlZDVhMjA1NjVkYjg5OTM3M2YzL2Z1bGwvMi4yL3ByZXZpZXdfdGFyZ2V0%0D%0ALndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjU5%0D%0AYmM3MjQ3MDc1OTRhOTliMGIzMzA5ZDQwOTczMmQxIiwidXNlcm5hbWUiOiJlOTg2ODRmMjA5NDQ0%0D%0ANGE0YmRmOTY1YjM5MmYyODg2NiJ9&inIFrame=1'
+      '/guest/streaming-embed?share=eyJxdWFsaXR5IjoiaGlnaCIsImF2YXRhck5hbWUiOiJlZjA4MDM5YTQxMzU0ZWQ1YTIwNTY1ZGI4%0D%0AOTkzNzNmMyIsInByZXZpZXdJbWciOiJodHRwczovL2ZpbGVzMi5oZXlnZW4uYWkvYXZhdGFyL3Yz%0D%0AL2VmMDgwMzlhNDEzNTRlZDVhMjA1NjVkYjg5OTM3M2YzL2Z1bGwvMi4yL3ByZXZpZXdfdGFyZ2V0%0D%0ALndlYnAiLCJuZWVkUmVtb3ZlQmFja2dyb3VuZCI6ZmFsc2UsImtub3dsZWRnZUJhc2VJZCI6IjU5%0D%0AYmM3MjQ3MDc1OTRhOTliMGIzMzA5ZDQwOTczMmQxIiwidXNlcm5hbWUiOiJlOTg2ODRmMjA5NDQ0%0D%0ANGE0YmRmOTY1YjM5MmYyODg2NiJ9&inIFrame=1';
     const initializeEmbed = (): (() => void) => {
       const clientWidth: number = document.body.clientWidth;
 
@@ -37,11 +37,15 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
       stylesheet.innerHTML = `
         #heygen-streaming-embed {
           // z-index: 9999;
-          position: absolute;
-          top: 100px;
-          ${clientWidth < 540 
-            ? "height: 266px; width: 50%; left: 40%; transform: translateX(-50%);" 
-            : "height: 366px; width: calc(366px * 16 / 9); left: 40%; transform: translateX(-50%);"}
+          position: fixed;
+          top: 30%;
+          left: 70%;
+
+          ${
+            clientWidth < 540
+              ? 'height: 266px; width: 50%; left: 50%; transform: translateX(-70%);'
+              : 'height: 366px; width: calc(366px * 16 / 9); left: 40%; transform: translateX(-50%);'
+          }
           border: 0;
           border-radius: 8px;
           // box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
@@ -55,9 +59,11 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
           visibility: visible;
         }
         #heygen-streaming-embed.expand {
-          ${clientWidth < 540 
-            ? "height: 266px; width: 50%; left: 40%;"  //transform: translateX(-50%);
-            : "height: 366px; width: calc(366px * 16 / 9); left: 40%;" } 
+          ${
+            clientWidth < 540
+              ? 'height: 266px; width: 50%; left: 40%;' //transform: translateX(-50%);
+              : 'height: 366px; width: calc(366px * 16 / 9); left: 40%;'
+          } 
           border: 0;
           border-radius: 8px;
         }

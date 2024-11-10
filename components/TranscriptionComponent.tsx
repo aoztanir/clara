@@ -1,9 +1,13 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { Card, Paper, Stack, Text, Title, ScrollArea, Divider } from '@mantine/core';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Box, Button, Card, Divider, Paper, ScrollArea, Stack, Text, Title } from '@mantine/core';
 import { generateUserResponseTitle } from '@/app/api/generativeAI/route';
-``
+import { generateInterviewData } from '@/app/api/interviewReportFunctions/route';
+import UserMessage from './User/UserMessage/UserMessage';
+
+``;
 const Bubble = ({ text, title }: { text: string; title: string }) => (
   <Stack>
     <Text size="md" fw="bold" mb="sm">
@@ -26,12 +30,17 @@ export default function TranscriptionComponent() {
   const [bubbleList, setBubbleList] = useState<Array<{ text: string; title: string }>>([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const isStartingRef = useRef(false); // New ref to track starting state
+  const [totalTranscript, setTotalTranscript] = useState('');
+
+  useEffect(() => {
+    console.log(totalTranscript);
+  }, [totalTranscript]);
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
         top: 0, // Changed to scroll to top
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
@@ -54,6 +63,16 @@ export default function TranscriptionComponent() {
     isStartingRef.current = false;
   };
 
+  const [endLoading, setEndLoading] = useState(false);
+  const endInterview = async () => {
+    setEndLoading(true);
+    const { id } = await generateInterviewData(totalTranscript);
+    router.push('/dashboard/history/' + id);
+    setEndLoading(false);
+  };
+
+  const router = useRouter();
+
   const startTranscription = async () => {
     // Prevent multiple simultaneous starts
     if (isStartingRef.current || recognitionRef.current) {
@@ -65,7 +84,7 @@ export default function TranscriptionComponent() {
       // @ts-ignore - SpeechRecognition is not in the types
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (!SpeechRecognition) {
-        console.error("Speech Recognition API not supported");
+        console.error('Speech Recognition API not supported');
         return;
       }
 
@@ -93,8 +112,9 @@ export default function TranscriptionComponent() {
             finalTranscript += transcript;
             if (finalTranscript.trim()) {
               const title = await generateUserResponseTitle(finalTranscript.trim());
-              setBubbleList(prev => [{ text: finalTranscript.trim(), title }, ...prev]);
+              setBubbleList((prev) => [{ text: finalTranscript.trim(), title }, ...prev]);
               setTimeout(scrollToBottom, 100);
+              setTotalTranscript((prev) => `${prev}\n\n${finalTranscript.trim()}`);
             }
           } else {
             currentInterimTranscript += transcript;
@@ -109,7 +129,7 @@ export default function TranscriptionComponent() {
         silenceTimerRef.current = setTimeout(async () => {
           if (currentInterimTranscript.trim()) {
             const title = await generateUserResponseTitle(currentInterimTranscript.trim());
-            setBubbleList(prev => [{ text: currentInterimTranscript.trim(), title }, ...prev]);
+            setBubbleList((prev) => [{ text: currentInterimTranscript.trim(), title }, ...prev]);
             setInterimTranscript('');
             setTimeout(scrollToBottom, 100);
           }
@@ -141,15 +161,15 @@ export default function TranscriptionComponent() {
 
   const restartRecognition = async () => {
     if (isStartingRef.current) return;
-    
+
     stopTranscription();
-    await new Promise(resolve => setTimeout(resolve, 250)); // Add small delay
+    await new Promise((resolve) => setTimeout(resolve, 250)); // Add small delay
     startTranscription();
   };
 
   useEffect(() => {
     startTranscription();
-    
+
     return () => {
       stopTranscription();
     };
@@ -157,43 +177,59 @@ export default function TranscriptionComponent() {
 
   return (
     <Stack align="center">
-      <Title order={2}>Interview Recording</Title>
-      
-      <Card 
-        shadow="sm" 
-        padding="xl" 
-        radius="md" 
-        withBorder 
-        w="100%" 
-        maw={600}
-        style={{ maxHeight: '80vh' }}
-      >
-        <Stack>
-          <Text c={isTranscribing ? "blue" : "dimmed"} ta="center" fw="bold">
-            {isTranscribing ? "Recording..." : "Waiting for speech..."}
-          </Text>
+      <Title order={2} className="artsy-text">
+        Interview Transcript
+      </Title>
 
-          <ScrollArea 
-            h={300}
-            viewportRef={scrollAreaRef}
-            offsetScrollbars
+      <Card shadow="sm" radius="md" withBorder w="100%" h="70vh" style={{ position: 'relative' }}>
+        <Stack>
+          <Box
+            h="100%"
+            style={{ overflowY: 'scroll', position: 'absolute', top: 0, left: 0, right: 0 }}
+            px="lg"
+            pb="lg"
           >
+            <Box my="lg" w="100%">
+              <Text c="dimmed" ta="center" fw="normal">
+                {isTranscribing ? 'Recording...' : 'Waiting for speech...'}
+              </Text>
+            </Box>
+            {/* <ScrollArea.Autosize h="100%" viewportRef={scrollAreaRef} offsetScrollbars> */}
+
             <Stack>
               {interimTranscript && (
-                <Paper shadow="xs" p="md" withBorder>
+                <Paper shadow="xl" p="md" withBorder>
                   <Text size="md" style={{ whiteSpace: 'pre-wrap' }}>
                     {interimTranscript}
                   </Text>
                 </Paper>
               )}
-
-              {bubbleList.map((bubble, index) => (
-                <Bubble key={index} text={bubble.text} title={bubble.title} />
-              ))}
+              <Stack gap="xl">
+                {bubbleList.map((bubble, index) => (
+                  <>
+                    <UserMessage
+                      bgNormal
+                      key={index}
+                      content={`### ${bubble.title} \n\n${bubble.text}`}
+                      user={false}
+                    />
+                  </>
+                ))}
+              </Stack>
             </Stack>
-          </ScrollArea>
+            {/* </ScrollArea.Autosize> */}
+          </Box>
         </Stack>
       </Card>
+      <Button
+        fullWidth
+        variant="light"
+        color="red"
+        onClick={() => endInterview()}
+        loading={endLoading}
+      >
+        End Interview
+      </Button>
     </Stack>
   );
 }
