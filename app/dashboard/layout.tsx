@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       //   aside={{ width: 300, breakpoint: 'md', collapsed: { desktop: false, mobile: true } }}
       padding="md"
     >
-      <AppShell.Header zIndex={1000}>
+      <AppShell.Header zIndex={100}>
         <Header />
         {/* <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
