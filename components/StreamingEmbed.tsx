@@ -39,11 +39,11 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
           // z-index: 9999;
           position: absolute;
           top: 100px;
-          left: 100px;
-          width: 500px;
-          height: 300px;
-          // border-radius: 50%;
-          // border: 2px solid #fff;
+          ${clientWidth < 540 
+            ? "height: 266px; width: 50%; left: 40%; transform: translateX(-50%);" 
+            : "height: 366px; width: calc(366px * 16 / 9); left: 40%; transform: translateX(-50%);"}
+          border: 0;
+          border-radius: 8px;
           // box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.12);
           transition: all linear 0.1s;
           overflow: hidden;
@@ -56,8 +56,8 @@ const StreamingEmbed: FC<StreamingEmbedProps> = ({ className }) => {
         }
         #heygen-streaming-embed.expand {
           ${clientWidth < 540 
-            ? "height: 266px; width: 50%; left: 62.5%; transform: translateX(-50%);" 
-            : "height: 366px; width: calc(366px * 16 / 9); left: 62.5%; transform: translateX(-50%);"}
+            ? "height: 266px; width: 50%; left: 40%;"  //transform: translateX(-50%);
+            : "height: 366px; width: calc(366px * 16 / 9); left: 40%;" } 
           border: 0;
           border-radius: 8px;
         }
