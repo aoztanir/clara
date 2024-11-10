@@ -15,14 +15,10 @@ import {
   ThemeIcon,
 } from '@mantine/core';
 import InteractiveAvatar from '@/components/AvatarChatInterface';
-import NewAvatarStreaming from '../../../components/NewAvatarStreaming';
 import StreamingEmbed from '@/components/StreamingEmbed';
-<<<<<<< HEAD
 import { useUser } from '@/components/User/AuthProvider';
 import UserMessage from '@/components/User/UserMessage/UserMessage';
-=======
-import UserMessage from '@/components/User/UserMessage/UserMessage'
->>>>>>> ayev
+import NewAvatarStreaming from '../../../components/NewAvatarStreaming';
 
 export default function DashboardPage() {
   const { user } = useUser();
@@ -31,7 +27,7 @@ export default function DashboardPage() {
       <Grid h="100%">
         <Grid.Col span={6} style={{ position: 'relative', height: '100%' }}>
           <Stack gap="lg" h="100%">
-            <Text fz="xl" fw={500} className="artsy-text" fw="900">
+            <Text fz="xl" fw={500} className="artsy-text">
               Hi, {user?.user_metadata?.name?.split(' ')?.[0]}! I'm here to help you interview
               better.
             </Text>
